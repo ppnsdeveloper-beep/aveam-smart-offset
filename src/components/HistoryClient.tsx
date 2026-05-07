@@ -127,12 +127,11 @@ export default function HistoryClient({ initialSessions, machines }: { initialSe
                 stroke="#94A3B8" 
                 fontSize={12} 
                 domain={([dataMin, dataMax]) => {
-                  if (machineId === "all") return ['auto', 'auto'];
                   const m = machines.find(m => m.id === parseInt(machineId));
-                  if (!m) return ['auto', 'auto'];
+                  if (!m) return [dataMin, dataMax];
                   const min = Math.min(dataMin, m.lowerLimit - 0.01);
                   const max = Math.max(dataMax, m.upperLimit + 0.01);
-                  return [min, max];
+                  return [min, max] as [number, number];
                 }} 
               />
               <Tooltip 
