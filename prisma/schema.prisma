@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Machine {
+  id         Int                  @id @default(autoincrement())
+  name       String               @unique
+  status     String               @default("Active")
+  target     Float                @default(10.0)
+  upperLimit Float                @default(10.05)
+  lowerLimit Float                @default(9.95)
+  sessions   MeasurementSession[]
+}
+
+model MeasurementSession {
+  id        Int                @id @default(autoincrement())
+  barcode   String
+  timestamp DateTime           @default(now())
+  status    String
+  machineId Int
+  machine   Machine            @relation(fields: [machineId], references: [id])
+  values    MeasurementValue[]
+}
+
+model MeasurementValue {
+  id        Int                @id @default(autoincrement())
+  value     Float
+  sessionId Int
+  session   MeasurementSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
